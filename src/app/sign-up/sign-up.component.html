@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6">
+        
+        <div class="card">
+          <div class="card-header">
+            <h2 class="text-center">Sign Up</h2>
+          </div>
+          <div class="card-body">
+            <form (ngSubmit)="onSignUp()" class="form" >
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email"class="form-control" [(ngModel)]="user.email" required />
+              </div>
+  
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password"  class="form-control" [(ngModel)]="user.password" required />
+              </div>
+  
+              <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+            </form>
+          </div>
+        </div>
+
+
+        <div class="card" *ngIf="isConfirm">
+            <div class="card-header">
+              <h2 class="text-center">Confirm Email</h2>
+            </div>
+            <div class="card-body">
+              <form (ngSubmit)="confirmSignUp()" class="form" >
+                <div class="form-group">
+                  <label for="Code">Code:</label>
+                  <input type="text" id="code" name="code" class="form-control" [(ngModel)]="user.code" required />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Confirm</button>
+              </form>
+            </div>
+        </div>
+
+          
+      </div>
+    </div>
+  </div>
+  
