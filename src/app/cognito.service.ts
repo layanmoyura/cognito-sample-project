@@ -32,6 +32,7 @@ export class CognitoService {
     this.authenticatedSubject = new BehaviorSubject<boolean>(false);
   }
 
+ 
   public signUp(user: IUser): Promise<any> {
     return Auth.signUp({
       username: user.email,
@@ -50,10 +51,9 @@ export class CognitoService {
     }).then((user) => {
       localStorage.clear();
       localStorage.setItem("activeUser",JSON.stringify(user));
-      this.getSessionToken();
       this.accesstoken=user.getSignInUserSession().getAccessToken().getJwtToken();
       this.idtoken=user.getSignInUserSession().getIdToken().getJwtToken();
-      debugger;
+      //debugger;
       this.refreshToken=user.getSignInUserSession().getRefreshToken().getToken();
       this.setToken();
       this.authenticatedSubject.next(true);
@@ -65,6 +65,7 @@ export class CognitoService {
       localStorage.removeItem('token');
       localStorage.removeItem('idtoken');
       localStorage.removeItem('refreshtoken');
+      localStorage.removeItem('activeUser');
       this.authenticatedSubject.next(false);
     });
   }
@@ -91,14 +92,7 @@ export class CognitoService {
     }
   }
 
-  public getSessionToken() {
-    Auth.configure({
-      oauth: CognitoService
-      })
-      Auth.currentAuthenticatedUser()
-      .then(user => console.log(user))
-      .catch(err => console.log(err))
-  }
+  
 
   setToken(): void {
    
@@ -113,6 +107,13 @@ export class CognitoService {
   getToken(): string | null {
     return localStorage.getItem('token');
   }
+
+  public updateUser(user: IUser): Promise<any> {
+    return Auth.currentUserPoolUser()
+    .then((cognitoUser: any) => {
+      return Auth.updateUserAttributes(cognitoUser, user);
+    });
+  }
  
  
   getNewJwtToken() {
@@ -120,13 +121,16 @@ export class CognitoService {
     this.activeUser =JSON.parse(jobDetailStr);
     if (!this.activeUser) {
       return null;
-  }
+    }
  
     const signInUserSession = this.activeUser.signInUserSession;
     const idToken = signInUserSession ? signInUserSession.accessToken : null;
     debugger;
+    console.log(idToken.payload.exp);
+    console.log(Date.now())
     if (!idToken || (idToken.payload.exp * 1000)-300 < Date.now()) {
       if (signInUserSession) {
+        debugger;
         Auth.Credentials.getCredSource().refreshSession();
         const refreshToken = signInUserSession.refreshToken.token;
         return new Promise((resolve) => {
