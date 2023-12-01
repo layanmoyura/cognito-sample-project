@@ -23,6 +23,7 @@ export class CognitoService {
   private refreshToken :string="";
   private tokenExpireTime :string="";
   tokenData:any;
+  activeUser:any;
 
   constructor() {
     Amplify.configure({
@@ -61,6 +62,9 @@ export class CognitoService {
 
   public signOut(): Promise<any> {
     return Auth.signOut().then(() => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('idtoken');
+      localStorage.removeItem('refreshtoken');
       this.authenticatedSubject.next(false);
     });
   }
@@ -100,11 +104,45 @@ export class CognitoService {
    
     localStorage.setItem('token', this.accesstoken);
     localStorage.setItem('idtoken', this.idtoken);
-    localStorage.setItem('represhtoken', this.refreshToken);
-    this.tokenData = jwtDecode(this.idtoken);
-    localStorage.setItem("userId",this.tokenData['custom:UserId']);
-    localStorage.setItem("tenantId",this.tokenData['custom:TenantId']);
-    localStorage.setItem("roleName",this.tokenData['custom:roleName']);
+    localStorage.setItem('refreshtoken', this.refreshToken);
+    //this.tokenData = jwtDecode(this.idtoken);
+   
+    
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+ 
+ 
+  getNewJwtToken() {
+    const jobDetailStr:any = localStorage.getItem("activeUser");
+    this.activeUser =JSON.parse(jobDetailStr);
+    if (!this.activeUser) {
+      return null;
+  }
+ 
+    const signInUserSession = this.activeUser.signInUserSession;
+    const idToken = signInUserSession ? signInUserSession.accessToken : null;
+    debugger;
+    if (!idToken || (idToken.payload.exp * 1000)-300 < Date.now()) {
+      if (signInUserSession) {
+        Auth.Credentials.getCredSource().refreshSession();
+        const refreshToken = signInUserSession.refreshToken.token;
+        return new Promise((resolve) => {
+          this.activeUser.refreshSession(refreshToken, (err:any, session:any) => {
+            if (err) {
+              resolve(this.signOut());
+            }
+            this.activeUser.setSignInUserSession(session);
+            resolve(session.getIdToken().getJwtToken());
+          })
+        });
+      }
+      return Promise.resolve(idToken.getJwtToken());
+    }
+ 
+    return Promise.resolve(idToken.getJwtToken());
   }
 
   
