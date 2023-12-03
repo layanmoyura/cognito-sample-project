@@ -97,7 +97,7 @@ export class CognitoService {
   setToken(): void {
    
     localStorage.setItem('token', this.accesstoken);
-    localStorage.setItem('idtoken', this.idtoken);
+    localStorage.setItem('idToken', this.idtoken);
     localStorage.setItem('refreshtoken', this.refreshToken);
     //this.tokenData = jwtDecode(this.idtoken);
    
@@ -114,6 +114,8 @@ export class CognitoService {
       return Auth.updateUserAttributes(cognitoUser, user);
     });
   }
+
+  
  
  
   getNewJwtToken() {
@@ -125,10 +127,9 @@ export class CognitoService {
  
     const signInUserSession = this.activeUser.signInUserSession;
     const idToken = signInUserSession ? signInUserSession.accessToken : null;
-    debugger;
-    console.log(idToken.payload.exp);
-    console.log(Date.now())
-    if (!idToken || (idToken.payload.exp * 1000)-300 < Date.now()) {
+    //debugger;
+    console.log((idToken.payload.exp*1000)-300);
+    if ((!idToken) || ((idToken.payload.exp * 1000)-300 < 1701591263701)) {
       if (signInUserSession) {
         debugger;
         Auth.Credentials.getCredSource().refreshSession();
