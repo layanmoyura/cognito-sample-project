@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Amplify,Auth} from 'aws-amplify';
-import {jwtDecode} from 'jwt-decode';
+//import {jwtDecode} from 'jwt-decode';
 import { environment } from '../environment/environment';
 
 export interface IUser {
@@ -74,6 +74,7 @@ export class CognitoService {
     return Auth.currentUserInfo();
   }
 
+
   public isAuthenticated():Promise<boolean>{
     if(this.authenticatedSubject.value){
       return Promise.resolve(true);
@@ -129,12 +130,63 @@ export class CognitoService {
     const idToken = signInUserSession ? signInUserSession.accessToken : null;
     //debugger;
     console.log((idToken.payload.exp*1000)-300);
-    if ((!idToken) || ((idToken.payload.exp * 1000)-300 < 1701591263701)) {
+    if ((!idToken) || ((idToken.payload.exp * 1000)-300 < 1701621268701)) {
       if (signInUserSession) {
+
+        const getTokens = async () => {
+          try {
+            debugger
+            // Auth.currentSession() checks if token is expired and refreshes with Cognito if needed automatically
+            const session = await Auth.currentSession();
+            debugger
+            const accessToken = session.getAccessToken().getJwtToken();
+            const idToken = session.getIdToken().getJwtToken();
+            const refreshToken = session.getRefreshToken().getToken();
+        
+            return { accessToken, idToken, refreshToken };
+          } catch (error) {
+            // Handle errors here
+            console.error("Error getting tokens:", error);
+            throw error;
+          }
+        };
+        
+        const setTokens = async () => {
+          try {
+            const tokens = await getTokens();
+        
+            // Store tokens in localStorage
+            localStorage.setItem('token', tokens.accessToken);
+            localStorage.setItem('idToken', tokens.idToken);
+            localStorage.setItem('refreshtoken', tokens.refreshToken);
+        
+            // Optionally decode the ID token
+            // const tokenData = jwtDecode(tokens.idToken);
+            // console.log("Decoded Token Data:", tokenData);
+          } catch (error) {
+            // Handle errors here
+            console.error("Error setting tokens:", error);
+            throw error;
+          }
+        };
+        
+        // Example usage:
+        try {
+          setTokens();
+          console.log("Tokens set in localStorage successfully!");
+        } catch (error) {
+          console.error("Failed to set tokens in localStorage:", error);
+        }
+
+
+        
+        
+        /* onsole.log(signInUserSession.refreshToken)
+        console.log(this.refreshToken)
         debugger;
-        Auth.Credentials.getCredSource().refreshSession();
-        const refreshToken = signInUserSession.refreshToken.token;
-        return new Promise((resolve) => {
+        const refreshToken = signInUserSession.refreshToken;
+        debugger; */
+        /* return new Promise((resolve) => {
           this.activeUser.refreshSession(refreshToken, (err:any, session:any) => {
             if (err) {
               resolve(this.signOut());
@@ -142,13 +194,15 @@ export class CognitoService {
             this.activeUser.setSignInUserSession(session);
             resolve(session.getIdToken().getJwtToken());
           })
-        });
+        }); */
       }
-      return Promise.resolve(idToken.getJwtToken());
+      return Promise.resolve(idToken.jwtToken);
     }
- 
-    return Promise.resolve(idToken.getJwtToken());
+    console.log(idToken.jwtToken)
+    return Promise.resolve(idToken.jwtToken);
   }
+
+  
 
   
 }
