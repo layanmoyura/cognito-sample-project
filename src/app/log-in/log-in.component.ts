@@ -17,7 +17,8 @@ export class LogInComponent {
 
   public onSignIn(): void{
     this.cognitoService.signIn(this.user).then(()=>{
-      this.router.navigate(['/home']);
+    this.router.navigate(['/home']);
+      
     }).catch(()=>{
       console.log("log in error");
     })
