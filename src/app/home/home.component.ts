@@ -16,7 +16,7 @@ export class HomeComponent {
       const cognitoUser = await Auth.currentAuthenticatedUser();
       const currentSession = await Auth.currentSession();
       const idToken = currentSession.getIdToken().getExpiration();
-      console.log(idToken)
+      console.log(idToken*1000)
       if ((idToken* 1000)- 300 < Date.now()){
         cognitoUser.refreshSession(currentSession.getRefreshToken(), (err: any, session: { idToken: any; refreshToken: any; accessToken: any; }) => {
           console.log('session', err, session);
