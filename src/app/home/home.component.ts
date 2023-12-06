@@ -15,11 +15,16 @@ export class HomeComponent {
     try {
       const cognitoUser = await Auth.currentAuthenticatedUser();
       const currentSession = await Auth.currentSession();
-      cognitoUser.refreshSession(currentSession.getRefreshToken(), (err: any, session: { idToken: any; refreshToken: any; accessToken: any; }) => {
-        console.log('session', err, session);
-        const { idToken, refreshToken, accessToken } = session;
-        // do whatever you want to do now :)
-      });
+      const idToken = currentSession.getIdToken().getExpiration();
+      console.log(idToken)
+      if ((idToken* 1000)- 300 < Date.now()){
+        cognitoUser.refreshSession(currentSession.getRefreshToken(), (err: any, session: { idToken: any; refreshToken: any; accessToken: any; }) => {
+          console.log('session', err, session);
+          const { idToken, refreshToken, accessToken } = session;
+          // do whatever you want to do now :)
+        });
+      }
+      
     } catch (e) {
       console.log('Unable to refresh Token', e);
     }
