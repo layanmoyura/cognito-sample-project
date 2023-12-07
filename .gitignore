@@ -27,7 +27,7 @@ yarn-error.log
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
-.src/environment/*
+src/environment/
 
 
 # Miscellaneous
