@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class LogInComponent {
   user:IUser;
+  isConfirm:boolean=false;
+  
 
   constructor(private router:Router, private cognitoService:CognitoService){
     this.user = {} as IUser
@@ -17,10 +19,20 @@ export class LogInComponent {
 
   public onSignIn(): void{
     this.cognitoService.signIn(this.user).then(()=>{
-    this.router.navigate(['/home']);
+      this.isConfirm=true;
+      
+    //this.router.navigate(['/home']);
       
     }).catch(()=>{
       console.log("log in error");
+    })
+  }
+
+  public confirmSignIn(): void {
+    this.cognitoService.handleSignInConfirmation(this.user.code).then(()=>{
+      this.router.navigate(['/home']);
+    }).catch(()=>{
+      console.log("error mfa")
     })
   }
 }

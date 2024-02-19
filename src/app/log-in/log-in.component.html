@@ -23,6 +23,22 @@
           </div>
         </div>
 
+
+        <div class="card" *ngIf="isConfirm">
+          <div class="card-header">
+            <h2 class="text-center">Confirm Sign In</h2>
+          </div>
+          <div class="card-body">
+            <form (ngSubmit)="confirmSignIn()" class="form" >
+              <div class="form-group">
+                <label for="Code">Code:</label>
+                <input type="text" id="code" name="code" class="form-control" [(ngModel)]="user.code" required />
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Confirm</button>
+            </form>
+          </div>
+      </div>
+
           
       </div>
     </div>

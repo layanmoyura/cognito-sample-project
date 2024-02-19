@@ -22,6 +22,7 @@ export class SignUpComponent {
 
   // Function to handle form submission
   public onSignUp(): void {
+    this.user.name = this.user.email.split('@')[0];
     this.cognitoService.signUp(this.user).then(()=>{
       this.isConfirm=true;
     }).catch(()=>{
@@ -30,6 +31,7 @@ export class SignUpComponent {
   }
 
   public confirmSignUp(): void {
+    console.log(this.user)
     this.cognitoService.confirmSignUp(this.user).then(()=>{
       this.router.navigate(['/login']);
     }).catch(()=>{
