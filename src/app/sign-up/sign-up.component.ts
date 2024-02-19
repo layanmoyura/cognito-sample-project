@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 
 export class SignUpComponent {
-  // Properties to store form data
+  
   isConfirm:boolean;
   user:IUser;
 
@@ -19,14 +19,13 @@ export class SignUpComponent {
     this.user = {} as IUser;
   }
  
-
-  // Function to handle form submission
   public onSignUp(): void {
     this.user.name = this.user.email.split('@')[0];
     this.cognitoService.signUp(this.user).then(()=>{
       this.isConfirm=true;
     }).catch(()=>{
       console.log("error when signup")
+      
     })
   }
 
@@ -36,6 +35,7 @@ export class SignUpComponent {
       this.router.navigate(['/login']);
     }).catch(()=>{
       console.log("error when confirm signup")
+      this.isConfirm=false
     })
   }
 }

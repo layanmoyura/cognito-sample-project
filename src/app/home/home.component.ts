@@ -18,7 +18,8 @@ export class HomeComponent {
       const token_exp = currentSession.getIdToken().getExpiration();
       //console.log(token_exp*1000)
       //console.log(Date.now())
-      if ((token_exp* 1000)- 300 < Date.now()){
+      //(token_exp* 1000)- 300 < Date.now()
+      if (true){
         cognitoUser.refreshSession(currentSession.getRefreshToken(), (err: any, session: { idToken: any; refreshToken: any; accessToken: any; }) => {
           console.log('session', err, session);
           const { idToken, refreshToken, accessToken } = session;
