@@ -21,9 +21,10 @@ export class LogInComponent {
   public onSignIn(): void{
     this.cognitoService.signIn(this.user).then(()=>{
       const setupUri = localStorage.getItem('TOTP_Setup_URI');
+      console.log(setupUri)
       if (setupUri) {
-        this.qrCodeData = setupUri; // Store URI for generating QR code
         this.isConfirm = true;
+        this.qrCodeData = setupUri; // Store URI for generating QR code
         this.generateQRCode(); // Generate QR code
       } else {
         console.error("TOTP_Setup_URI not found in local storage");
