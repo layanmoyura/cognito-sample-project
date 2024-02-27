@@ -12,7 +12,7 @@ SMS and Time-based One-Time Password (TOTP) Authenticator.
 - **User Login**: Registered users can log in to the application.
 - **MFA**: Users can secure their accounts using multi-factor
 authentication. The application supports both SMS and TOTP Authenticator
-methods.
+methods.(SMS MFA is implemented in SMS_MFA branch and TOTP in main branch)
 - **Token Refresh**: The application includes a mechanism to refresh
 tokens based on the expiry time of JSON Web Tokens (JWT).
 - **MFA Toggle**: Users have the option to enable or disable MFA for their
