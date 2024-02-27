@@ -2,8 +2,11 @@
 <h2>This is Home</h2>
 
 <div id="managemfa" class="w3-container w3-padding-large w3-grey tab" style="margin-right: 5px;">
-    <button type="submit" class="w3-button w3-black w3-margin-bottom" (click)="enableMFA()">Enable MFA</button>
-    <button type="submit" class="w3-button w3-black w3-margin-bottom" (click)="disableMFA()">Disable MFA</button>
+    <!-- Show "Enable MFA" button if currentMFA is NOMFA -->
+    <button *ngIf="currentMFA === 'NOMFA'" type="submit" class="w3-button w3-black w3-margin-bottom" (click)="enableMFA()">Enable MFA</button>
+    
+    <!-- Show "Disable MFA" button if currentMFA is SOFTWARE_TOKEN_MFA -->
+    <button *ngIf="currentMFA === 'SOFTWARE_TOKEN_MFA'" type="submit" class="w3-button w3-black w3-margin-bottom" (click)="disableMFA()">Disable MFA</button>
     <qrcode *ngIf="totpUri" [qrdata]="totpUri" [allowEmptyString]="true"></qrcode>
     <img *ngIf="!totpUri" alt="no qr" width="128" height="128">
     <button type="submit" class="w3-button w3-black w3-margin-bottom" (click)="continueMFA()">Verify</button> 

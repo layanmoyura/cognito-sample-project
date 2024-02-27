@@ -78,16 +78,12 @@ export class CognitoService {
 
 
 public async handleSignInNextSteps() {
-  switch (this.cognitoUser.challengeName) {
-    // ...
-    case 'NOMFA':
-      this.router.navigate(['/home']);
-      break;
-
-    case 'SOFTWARE_TOKEN_MFA':
-      this.router.navigate(['/otp'])
-    break;
-    // ...
+  if(this.cognitoUser.preferredMFA=='NOMFA'){
+    this.authenticatedSubject.next(true);
+    this.router.navigate(['/home']);
+  }
+  else if(this.cognitoUser.challengeName == 'SOFTWARE_TOKEN_MFA'){
+    this.router.navigate(['/otp']);
   }
 }
 
@@ -163,6 +159,24 @@ public async handleSignInNextSteps() {
   async handleTOTPVerification(user:any,totpCode: string):Promise<any> {
     try {
       await Auth.verifyTotpToken(user,totpCode);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getCurrentMFA(user:any):Promise<string|null>{
+    try{
+      return await Auth.getPreferredMFA(user);
+    } catch(error){
+      console.log(error)
+      return null;
+    }
+  }
+
+
+  async disableMFAPreference(user:any):Promise<any> {
+    try {
+      await Auth.setPreferredMFA(user,"NOMFA");
     } catch (error) {
       console.log(error);
     }
