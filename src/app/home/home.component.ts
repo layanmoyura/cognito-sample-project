@@ -60,6 +60,7 @@ export class HomeComponent {
     try {
       const cognitoUser = await Auth.currentAuthenticatedUser();
       await this.cognitoService.disableMFAPreference(cognitoUser);
+      this.currentMFA = await this.cognitoService.getCurrentMFA(cognitoUser);
     } catch (e) {
       console.error('Error disabling MFA', e);
       alert('Error: Unable to disable MFA');
@@ -71,6 +72,8 @@ export class HomeComponent {
       const cognitoUser = await Auth.currentAuthenticatedUser();
       await this.cognitoService.handleTOTPVerification(cognitoUser, this.user.code);
       await this.cognitoService.handleUpdateMFAPreference(cognitoUser);
+      this.isConfirm=false
+      this.currentMFA = await this.cognitoService.getCurrentMFA(cognitoUser);
     } catch (e) {
       console.error('Error confirming MFA', e);
       alert('Error: Unable to confirm MFA');
