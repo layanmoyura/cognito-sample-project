@@ -1,0 +1,4 @@
+/* Assuming .empty class represents an empty QR code */
+#qrcode.empty {
+    margin-top: 20px; /* Adjust this value as needed */
+}

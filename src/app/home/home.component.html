@@ -1,1 +1,28 @@
+<!-- home.component.html -->
 <h2>This is Home</h2>
+
+<div id="managemfa" class="w3-container w3-padding-large w3-grey tab" style="margin-right: 5px;">
+    <button type="submit" class="w3-button w3-black w3-margin-bottom" (click)="enableMFA()">Enable MFA</button>
+    <button type="submit" class="w3-button w3-black w3-margin-bottom" (click)="disableMFA()">Disable MFA</button>
+    <qrcode [qrdata]="totpUri" [allowEmptyString]=true></qrcode>
+    <button type="submit" class="w3-button w3-black w3-margin-bottom" (click)="continueMFA()">Verify</button> 
+</div>
+
+
+<div class="card" *ngIf="isConfirm">
+    <div class="card-header">
+      <h2 class="text-center">Confirm Sign In</h2>
+    </div>
+    <div class="card-body">
+      <div id="qrcode"></div>
+      <form (ngSubmit)="confirmMFA()" class="form" >
+        <div class="form-group">
+          <label for="Code">Code:</label>
+          <input type="text" id="code" name="code" class="form-control" [(ngModel)]="user.code" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Confirm</button>
+      </form>
+    </div>
+</div>
+
+

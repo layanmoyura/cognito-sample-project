@@ -61,9 +61,8 @@ export class CognitoService {
     username: user.email,
     password: user.password
   }).then((response) => {
-    console.log(response);
-    this.cognitoUser = response;
-    this.handleSignInNextSteps();
+    console.log(response)
+    
   }).catch((error) => {
     console.error("Error occurred during sign-in:", error);
     // Handle the error here, for example:
@@ -140,6 +139,35 @@ public async handleSignInNextSteps() {
       }).catch(()=> {
         return false;
       })
+    }
+  }
+
+  async handleUpdateMFAPreference(user:any):Promise<any> {
+    try {
+      await Auth.setPreferredMFA(user,"TOTP");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async handleTOTPSetup(user:any):Promise<string|null> {
+    try {
+      const totpSetupDetails = await Auth.setupTOTP(user);
+      
+      return totpSetupDetails;
+      // Open setupUri with an authenticator APP to retrieve an OTP code
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+
+  async handleTOTPVerification(user:any,totpCode: string):Promise<any> {
+    try {
+      await Auth.verifyTotpToken(user,totpCode);
+    } catch (error) {
+      console.log(error);
     }
   }
 
