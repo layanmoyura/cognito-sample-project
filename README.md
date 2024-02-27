@@ -1,27 +1,42 @@
-# CognitoSampleProject
+# Angular Authentication App with AWS Cognito
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.3.
+This project is an Angular application that implements user authentication
+using AWS Cognito User Pools. It includes features such as sign up, sign
+up confirmation, log in, and multi-factor authentication (MFA) with both
+SMS and Time-based One-Time Password (TOTP) Authenticator.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **User Registration**: New users can create an account.
+- **User Confirmation**: Users can confirm their account after registration.
+- **User Login**: Registered users can log in to the application.
+- **MFA**: Users can secure their accounts using multi-factor
+authentication. The application supports both SMS and TOTP Authenticator
+methods.
+- **Token Refresh**: The application includes a mechanism to refresh
+tokens based on the expiry time of JSON Web Tokens (JWT).
+- **MFA Toggle**: Users have the option to enable or disable MFA for their
+accounts.
 
-## Code scaffolding
+## Getting Started
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+These instructions will get you a copy of the project up and running on
+your local machine for development and testing purposes.
 
-## Build
+### Prerequisites
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- Node.js
+- Angular CLI
+- AWS Account
 
-## Running unit tests
+### Installation
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1. Clone the repository.
+2. Install the dependencies using `npm install`.
+3. Configure your AWS credentials.
+4. Run the application using `ng serve`.
 
-## Running end-to-end tests
+## Contributing
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Please read CONTRIBUTING.md for details on our code of conduct, and the
+process for submitting pull requests to us.
