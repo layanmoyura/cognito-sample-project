@@ -8,6 +8,7 @@ import { LogInComponent } from './log-in/log-in.component';
 import { LogoutComponent } from './logout/logout.component';
 import { HomeComponent } from './home/home.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { ConfirmOtpComponent } from './confirm-otp/confirm-otp.component';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { QRCodeModule } from 'angularx-qrcode';
     LogInComponent,
     LogoutComponent,
     HomeComponent,
+    ConfirmOtpComponent,
   ],
   imports: [
     BrowserModule,

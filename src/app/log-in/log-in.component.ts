@@ -23,7 +23,6 @@ export class LogInComponent {
     this.cognitoService.signIn(this.user).then((response)=>{
       console.log(response)
       this.cognitoUser=response;
-      this.router.navigate(['/home']);
     }).catch(()=>{
       console.log("log in error");
     })

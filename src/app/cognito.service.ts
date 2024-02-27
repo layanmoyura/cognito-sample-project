@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Amplify,Auth} from 'aws-amplify';
 import { environment } from '../environment/environment';
+import { Router } from '@angular/router';
 
 export interface IUser {
   email: string;
@@ -20,7 +21,7 @@ export class CognitoService {
   cognitoUser:any
   private authenticatedSubject:BehaviorSubject<any>;
 
-  constructor() {
+  constructor(private router:Router) {
     Amplify.configure({
      Auth:environment.cognito
     });
@@ -62,6 +63,8 @@ export class CognitoService {
     password: user.password
   }).then((response) => {
     console.log(response)
+    this.cognitoUser=response;
+    this.handleSignInNextSteps();
     
   }).catch((error) => {
     console.error("Error occurred during sign-in:", error);
@@ -77,21 +80,13 @@ export class CognitoService {
 public async handleSignInNextSteps() {
   switch (this.cognitoUser.challengeName) {
     // ...
-    case 'MFA_SETUP':
-      if (this.cognitoUser.challengeParam && this.cognitoUser.challengeParam.MFAS_CAN_SETUP) {
-        const mfaMethods = JSON.parse(this.cognitoUser.challengeParam.MFAS_CAN_SETUP);
-        if (mfaMethods.includes("SOFTWARE_TOKEN_MFA")) {
-          try {
-            const setupUri = await Auth.setupTOTP(this.cognitoUser);
-            console.log(setupUri)
-            localStorage.setItem('TOTP_Setup_URI', setupUri);
-          } catch (error) {
-            console.error("Error setting up TOTP:", error);
-            // Handle error if needed
-          }
-        }
-      }
+    case 'NOMFA':
+      this.router.navigate(['/home']);
       break;
+
+    case 'SOFTWARE_TOKEN_MFA':
+      this.router.navigate(['/otp'])
+    break;
     // ...
   }
 }
@@ -99,10 +94,11 @@ public async handleSignInNextSteps() {
 
 
   public handleSignInConfirmation(otpCode: string): Promise<any> {
-    return Auth.confirmSignIn(this.cognitoUser, otpCode, "SOFTWARE_TOKEN_MFA")
+    return Auth.confirmSignIn(this.cognitoUser, otpCode,'SOFTWARE_TOKEN_MFA')
         .then((response) => {
             console.log(response);
             this.authenticatedSubject.next(true);
+            this.router.navigate(['/home']);
         })
         .catch((error) => {
             console.error("Error during sign-in confirmation:", error);
@@ -115,6 +111,7 @@ public async handleSignInNextSteps() {
 
   public signOut(): Promise<any> {
     return Auth.signOut().then(() => {
+      this.cognitoUser=null;
       this.authenticatedSubject.next(false);
     });
   }
@@ -171,6 +168,7 @@ public async handleSignInNextSteps() {
     }
   }
 
+  
  
 
 }
