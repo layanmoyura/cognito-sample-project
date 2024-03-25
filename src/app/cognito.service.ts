@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Amplify,Auth} from 'aws-amplify';
 import { environment } from '../environment/environment';
 import { Router } from '@angular/router';
+import { CognitoIdentityProvider } from 'aws-sdk/clients/cognitoidentity';
 
 export interface IUser {
   email: string;
