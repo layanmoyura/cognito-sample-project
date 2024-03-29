@@ -3,6 +3,13 @@ import { CognitoService,IUser } from '../cognito.service';
 import { Router } from '@angular/router';
 import * as QRCode from 'qrcode'; // Import QRCode as a function
 
+import { SocialAuthService } from '@abacritt/angularx-social-login';
+import {
+  GoogleLoginProvider,
+  FacebookLoginProvider
+} from '@abacritt/angularx-social-login';
+import { SocialUser } from '@abacritt/angularx-social-login';
+
 @Component({
   selector: 'app-log-in',
   templateUrl: './log-in.component.html',
@@ -13,10 +20,21 @@ export class LogInComponent {
   isConfirm:boolean=false;
   qrCodeData: any;
   cognitoUser:any
+  socialUser: SocialUser|null = null;
   
 
-  constructor(private router:Router, private cognitoService:CognitoService){
+  constructor(private router:Router, private cognitoService:CognitoService, private socialAuthService: SocialAuthService) {
     this.user = {} as IUser
+
+    this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
+      console.log(socialUser);
+      this.socialUser = socialUser;
+      this.user.email = this.socialUser.email;
+      this.user.password = this.socialUser.idToken;
+      if(this.socialUser){
+        this.cognitoService.signIn(this.user);
+      }
+    });
   }
 
   public onSignIn(): void{
