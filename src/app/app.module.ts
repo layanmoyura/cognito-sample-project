@@ -10,6 +10,12 @@ import { HomeComponent } from './home/home.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { ConfirmOtpComponent } from './confirm-otp/confirm-otp.component';
 
+import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import {
+  GoogleLoginProvider,
+  FacebookLoginProvider
+} from '@abacritt/angularx-social-login';
+
 
 @NgModule({
   declarations: [
@@ -24,7 +30,8 @@ import { ConfirmOtpComponent } from './confirm-otp/confirm-otp.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    QRCodeModule
+    QRCodeModule,
+    SocialLoginModule
     
   ],
   providers: [],
