@@ -3,14 +3,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Amplify,Auth} from 'aws-amplify';
 import { environment } from '../environment/environment';
 import { Router } from '@angular/router';
-import { CognitoIdentityProvider } from 'aws-sdk/clients/cognitoidentity';
+
 
 export interface IUser {
   email: string;
   password: string;
   code: string;
   name: string;
-  phone_number:string;
 }
 
 
@@ -35,7 +34,7 @@ export class CognitoService {
       return await Auth.signUp({
         username: user.name,
         password: user.password,
-        attributes: { email: user.email, phone_number: user.phone_number }
+        attributes: { email: user.email}
       });
     } catch (error) {
       console.error("Error during sign-up:", error);

@@ -9,6 +9,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { HomeComponent } from './home/home.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { ConfirmOtpComponent } from './confirm-otp/confirm-otp.component';
+import { environment } from '../environment/environment';
 
 import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import {
@@ -50,7 +51,7 @@ import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
           },
           {
             id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider('clientId')
+            provider: new FacebookLoginProvider(environment.googleClientId)
           }
         ],
         onError: (err) => {

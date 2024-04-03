@@ -70,6 +70,10 @@ export class LogInComponent {
     });
   }
 
+  public signInWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
+
 
   
 
