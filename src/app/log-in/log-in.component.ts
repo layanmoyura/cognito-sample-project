@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { CognitoService,IUser } from '../cognito.service';
 import { Router } from '@angular/router';
-import * as QRCode from 'qrcode'; // Import QRCode as a function
-
 import { SocialAuthService } from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,
@@ -28,18 +26,34 @@ export class LogInComponent {
 
     this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
       console.log(socialUser)
+
       if(socialUser){
         
         this.user.name = socialUser.email.split('@')[0];
         this.user.email = socialUser.email;
-        this.user.password = socialUser.id;
+        this.user.password = this.cognitoService.generatePasswordFromSub(socialUser.idToken);
         
-        this.cognitoService.signUp(this.user).then(()=>{
-          this.isConfirm=true;
+        this.cognitoService.signIn(this.user).then((response)=>{
 
-        });
+          console.log(response);
+          this.cognitoUser=response;
+          this.router.navigate(['/home']);
+
+        }).catch((err)=>{
+          
+          if(err.code == 'NotAuthorizedException'){
+            this.router.navigate(['/signup'], {
+              queryParams: { user: JSON.stringify(this.user) }
+            });
+          }
+          
+          
+        })
+      
       }
+    
     });
+
   }
 
   public onSignIn(): void{
@@ -61,18 +75,6 @@ export class LogInComponent {
             this.isConfirm=false;
             this.router.navigate(['/login']);
         });
-  }
-
-  public generateQRCode(): void {
-    const qrContainer = document.getElementById('qrcode');
-    QRCode.toCanvas(qrContainer, this.qrCodeData, function (error) {
-      if (error) {
-        console.error("Error generating QR code:", error);
-        // Handle error if needed
-      } else {
-        console.log('QR Code generated');
-      }
-    });
   }
 
   public signInWithGoogle(): void {

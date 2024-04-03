@@ -3,6 +3,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Amplify,Auth} from 'aws-amplify';
 import { environment } from '../environment/environment';
 import { Router } from '@angular/router';
+import { SHA256, enc } from 'crypto-js';
+import jwt_decode, { jwtDecode } from 'jwt-decode';
 
 
 export interface IUser {
@@ -181,6 +183,24 @@ public async handleSignInNextSteps() {
       console.log(error);
     }
   }
+
+  public generatePasswordFromSub = (idToken:string): string => {
+
+    const decodedToken = jwtDecode(idToken);       
+    const sub = decodedToken.sub; 
+    
+    const hashedSub = sub ? SHA256(sub).toString(enc.Hex) : ''; 
+    
+    let password = hashedSub.slice(0, 12); 
+
+    password += 'A'; 
+    password += 'a'; 
+    password += '1'; 
+    password += '@'; 
+
+    
+    return password;
+  };
 
   
  
