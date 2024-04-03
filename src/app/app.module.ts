@@ -45,13 +45,11 @@ import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              'clientId'
-            )
+            provider: new GoogleLoginProvider(environment.googleClientId)
           },
           {
             id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider(environment.googleClientId)
+            provider: new FacebookLoginProvider(environment.facebookClientId)
           }
         ],
         onError: (err) => {

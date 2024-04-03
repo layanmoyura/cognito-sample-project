@@ -20,19 +20,24 @@ export class LogInComponent {
   isConfirm:boolean=false;
   qrCodeData: any;
   cognitoUser:any
-  socialUser: SocialUser|null = null;
+  
   
 
   constructor(private router:Router, private cognitoService:CognitoService, private socialAuthService: SocialAuthService) {
     this.user = {} as IUser
 
     this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
-      console.log(socialUser);
-      this.socialUser = socialUser;
-      this.user.email = this.socialUser.email;
-      this.user.password = this.socialUser.idToken;
-      if(this.socialUser){
-        this.cognitoService.signIn(this.user);
+      console.log(socialUser)
+      if(socialUser){
+        
+        this.user.name = socialUser.email.split('@')[0];
+        this.user.email = socialUser.email;
+        this.user.password = socialUser.id;
+        
+        this.cognitoService.signUp(this.user).then(()=>{
+          this.isConfirm=true;
+
+        });
       }
     });
   }
