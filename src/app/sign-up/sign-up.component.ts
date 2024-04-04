@@ -17,7 +17,15 @@ export class SignUpComponent {
   constructor(private router:Router, private cognitoService:CognitoService) {
     this.isConfirm=false;
     this.user = {} as IUser;
+
+    if(this.cognitoService.sharedUser.email){
+      this.user.email = this.cognitoService.sharedUser.email;
+      this.user.password = this.cognitoService.sharedUser.password;
+    }
+
   }
+
+
  
   public onSignUp(): void {
     this.user.name = this.user.email.split('@')[0];

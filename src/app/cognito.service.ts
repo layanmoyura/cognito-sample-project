@@ -6,13 +6,18 @@ import { Router } from '@angular/router';
 import { SHA256, enc } from 'crypto-js';
 import jwt_decode, { jwtDecode } from 'jwt-decode';
 
-
 export interface IUser {
   email: string;
   password: string;
   code: string;
   name: string;
 }
+
+export interface ISharedUser {
+  email: string;
+  password: string;
+}
+
 
 
 @Injectable({
@@ -21,6 +26,7 @@ export interface IUser {
 export class CognitoService {
 
   cognitoUser:any
+  sharedUser = {} as ISharedUser;
   private authenticatedSubject:BehaviorSubject<any>;
 
   constructor(private router:Router) {
@@ -28,6 +34,7 @@ export class CognitoService {
      Auth:environment.cognito
     });
     this.authenticatedSubject = new BehaviorSubject<boolean>(false);
+    
   }
 
   public async signUp(user: IUser): Promise<any> {

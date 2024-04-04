@@ -32,6 +32,10 @@ export class LogInComponent {
         this.user.name = socialUser.email.split('@')[0];
         this.user.email = socialUser.email;
         this.user.password = this.cognitoService.generatePasswordFromSub(socialUser.idToken);
+
+        this.cognitoService.sharedUser.email = socialUser.email;
+        this.cognitoService.sharedUser.password = this.user.password;
+        
         
         this.cognitoService.signIn(this.user).then((response)=>{
 
@@ -42,12 +46,8 @@ export class LogInComponent {
         }).catch((err)=>{
           
           if(err.code == 'NotAuthorizedException'){
-            this.router.navigate(['/signup'], {
-              queryParams: { user: JSON.stringify(this.user) }
-            });
-          }
-          
-          
+            this.router.navigate(['/signup']);
+          }   
         })
       
       }
