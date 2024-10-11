@@ -20,7 +20,7 @@
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "angularx-qrcode": "^17.0.0",
-    "aws-amplify": "^5.3.3",
+    "aws-amplify": "^6.6.4",
     "aws-sdk": "^2.1584.0",
     "crypto-js": "^4.2.0",
     "jwt-decode": "^4.0.0",
